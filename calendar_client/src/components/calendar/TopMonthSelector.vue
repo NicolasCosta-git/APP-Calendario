@@ -37,7 +37,7 @@ export default {
       return new Date().getMonth();
     },
     nextMonth: function() {
-      if (this.currentMonthNumber < 12) {
+      if (this.currentMonthNumber < 11) {
         this.currentMonth = this.months[this.currentMonthNumber + 1];
         this.currentMonthNumber = this.currentMonthNumber + 1;
       } else {

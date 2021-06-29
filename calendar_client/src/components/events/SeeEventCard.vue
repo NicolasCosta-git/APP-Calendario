@@ -1,12 +1,12 @@
 <template>
   <form action="">
-    <div class="new-event-card">
+    <div class="see-event-card">
       <div class="event-card">
         <div class="card-header">
           <a href="" class="exit-button"
             ><img src="../../assets/x-mark.png" alt=""
           /></a>
-          <h1>{{ dataDay }}/{{ dataMonth }}/{{ year }} - Novo Evento</h1>
+          <h1>Nome do Evento</h1>
         </div>
         <div class="event-details">
           <input
@@ -23,6 +23,10 @@
             <label for="time" class="time-label"> Termina às:</label>
             <input type="time" name="time" id="time" class="event-time" />
           </div>
+          <div class="date-panel">
+            <label for="date" class="date-label">Dia do evento: </label>
+            <input name="date" id="date" type="date" class="event-date" />
+          </div>
           <textarea
             name="event-description"
             id=""
@@ -31,9 +35,14 @@
             placeholder="Descrição do evento"
             class="event-description"
           ></textarea>
-          <button type="submit" class="event-button">
-            Criar
-          </button>
+          <div class="button-panel">
+            <button type="submit" class="save-button">
+              Salvar
+            </button>
+            <button class="delete-button">
+              Deletar
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -63,7 +72,7 @@ export default {
 </script>
 
 <style scoped>
-.new-event-card {
+.see-event-card {
   position: fixed;
   height: 100vh;
   width: 100%;
@@ -81,10 +90,10 @@ export default {
   margin: auto;
   width: 600px;
   border-radius: 13px;
-  height: 700px;
+  height: 800px;
   background-color: #e9e7e7;
-  border: 1px solid rgba(0, 0, 0, 0.212);
   overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.212);
 }
 
 .card-header {
@@ -166,8 +175,13 @@ export default {
   box-shadow: 0 0 3pt 2pt rgba(0, 0, 0, 0.05);
 }
 
-.event-button {
-  width: 100%;
+.button-panel {
+  text-align: center;
+}
+
+.save-button {
+  width: 45%;
+  display: inline;
   border: none;
   line-height: 50px;
   margin-top: 20px;
@@ -175,13 +189,59 @@ export default {
   border-radius: 8px;
   font-size: 1.7em;
   color: #2c3e50;
+  margin-right: 5px;
 }
 
-.event-button:hover {
+.save-button:hover {
   box-shadow: 0 0 3pt 2pt rgba(0, 0, 0, 0.05);
   background-color: #b4e2de;
-  color: #354a5ff3;
+  color: #000000cb;
   cursor: pointer;
+}
+
+.delete-button {
+  width: 45%;
+  display: inline;
+  border: none;
+  line-height: 50px;
+  margin-top: 20px;
+  border-radius: 8px;
+  font-size: 1.7em;
+  margin-left: 5px;
+  background-color: #ff6152de;
+  color: #532020d8;
+}
+
+.delete-button:hover {
+  box-shadow: 0 0 3pt 2pt rgba(0, 0, 0, 0.05);
+  background-color: #f16052de;
+  color: #1c2631f3;
+  cursor: pointer;
+}
+
+.date-panel {
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+
+.event-date {
+  border: none;
+  padding: 20px;
+  font-size: 1.3em;
+  margin-top: 30px;
+  border-radius: 8px;
+}
+
+.date-label {
+  text-align: center;
+  font-size: 1.2em;
+  padding-bottom: 5px;
+}
+
+.event-date:focus {
+  outline: none;
+  box-shadow: 0 0 3pt 2pt rgba(0, 0, 0, 0.05);
 }
 
 .exit-button {

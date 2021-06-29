@@ -7,7 +7,7 @@
       <TopMonthSelector @update="buildCalendar(undefined, $event.month)" />
     </div>
     <div>
-      <TopYearSelector @update="buildCalendar($event.year)" />
+      <TopYearSelector @update="buildCalendar($event.year, undefined)" />
     </div>
     <div>
       <DayIndicator />
@@ -25,12 +25,30 @@
           <DateCard :empty="true" />
         </div>
         <div v-else>
-          <DateCard :day="day" @newPopup="showPopup($event.day)" />
+          <div v-if="fake == true">
+            <DateCard
+              :day="day"
+              :fake="fake"
+              :month="currentMonth"
+              :year="currentYear"
+              @newPopup="showPopup($event.day)"
+            />
+          </div>
+          <div v-else>
+            <DateCard
+              :day="day"
+              :month="currentMonth"
+              :year="currentYear"
+              @newPopup="showPopup($event.day)"
+            />
+          </div>
         </div>
       </div>
     </div>
-    <FloatMenu />
-    <TopMenu />
+    <div v-if="fake !== true">
+      <FloatMenu />
+      <TopMenu />
+    </div>
   </div>
 </template>
 
@@ -58,7 +76,10 @@ export default {
       },
     };
   },
-  name: "App",
+  props: {
+    fake: Boolean,
+  },
+  name: "CalendarPanel",
   components: {
     DateCard,
     SideMonthSelector,
@@ -78,7 +99,7 @@ export default {
     },
     buildCalendar: function(
       year = this.currentYear,
-      month = this.currenthMonth
+      month = this.currentMonth
     ) {
       let dayCount = Array();
       for (let i = 1; i <= this.getDaysInMonth(year, month); i++) {
@@ -88,7 +109,7 @@ export default {
         dayCount.unshift(-1);
       }
       this.dayCount = dayCount;
-      this.currenthMonth = month;
+      this.currentMonth = month;
       this.currentYear = year;
     },
     showPopup: function(day) {
@@ -97,11 +118,17 @@ export default {
       this.popupData.year = this.currentYear;
       this.allowPopup = true;
     },
+    checkToday() {
+      if ((this.currenthMonth = new Date().getMonth())) {
+        console.log(this.currenthMonth);
+        return true;
+      }
+    },
   },
   created() {
-    this.buildCalendar(new Date().getFullYear(), new Date().getMonth());
     this.currentYear = new Date().getFullYear();
-    this.currenthMonth = new Date().getMonth();
+    this.currentMonth = new Date().getMonth();
+    this.buildCalendar(new Date().getFullYear(), new Date().getMonth());
   },
 };
 </script>

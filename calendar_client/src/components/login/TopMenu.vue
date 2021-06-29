@@ -1,7 +1,7 @@
 <template>
   <div class="top-menu">
     <div class="float-icon">
-      <h3>Meus eventos</h3>
+      <h3><a href="#">Registre-se</a></h3>
       <div class="black-bar"></div>
     </div>
   </div>
@@ -22,12 +22,20 @@ export default {};
   margin-left: 92%;
   padding-top: 5px;
   text-align: center;
+  z-index: 2;
 }
 
 .float-icon h3 {
   padding: 0px 5px;
   color: rgba(0, 0, 0, 0.918);
   font-size: 1.15em;
+}
+
+.float-icon h3 a {
+  text-decoration: none;
+  padding-left: 10px;
+  padding-right: 10px;
+  color: rgba(0, 0, 0, 0.836);
 }
 
 .float-icon {

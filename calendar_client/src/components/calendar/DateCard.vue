@@ -2,21 +2,24 @@
   <div>
     <div
       :class="{
+        'date-card today': empty !== true && today(),
         'date-card': empty !== true,
         'empty-card': empty == true,
       }"
     >
       <h1>{{ day }}</h1>
-      <div
-        :class="{
-          'new-event': empty !== undefined,
-          'empty-card': empty == true,
-        }"
-      >
-        <a @click="newPopup()" href="#">
-          <img src="../../assets/plus.png" alt="" />
-        </a>
-        <a @click="newPopup()" href="#">Adicionar evento</a>
+      <div v-if="fake !== true">
+        <div
+          :class="{
+            'new-event': empty !== undefined,
+            'empty-card': empty == true,
+          }"
+        >
+          <a @click="newPopup()" href="#">
+            <img src="../../assets/plus.png" alt="" />
+          </a>
+          <a @click="newPopup()" href="#">Adicionar evento</a>
+        </div>
       </div>
     </div>
   </div>
@@ -26,7 +29,10 @@
 export default {
   props: {
     day: Number,
+    month: Number,
+    year: Number,
     empty: Boolean,
+    fake: Boolean,
   },
   data() {
     return {};
@@ -34,6 +40,16 @@ export default {
   methods: {
     newPopup() {
       this.$emit("newPopup", { day: this.day });
+    },
+    today() {
+      if (
+        this.day == new Date().getDate() &&
+        this.month == new Date().getMonth() &&
+        this.year == new Date().getFullYear()
+      ) {
+        return true;
+      }
+      return false;
     },
   },
 };
@@ -82,6 +98,10 @@ export default {
   color: #2c3e50;
   font-size: 1.1em;
   font-weight: 300;
+}
+
+.today {
+  background-color: #b2dfdb36 !important;
 }
 
 .empty-card {

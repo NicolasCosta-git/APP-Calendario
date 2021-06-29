@@ -1,6 +1,8 @@
 <template>
   <div>
-    <CalendarPanel />
+    <div>
+      <CalendarPanel />
+    </div>
   </div>
 </template>
 

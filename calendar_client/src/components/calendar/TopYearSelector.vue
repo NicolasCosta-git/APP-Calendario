@@ -23,7 +23,6 @@ export default {
     },
     nextYear: function() {
       this.currentYear += 1;
-      console.log(this.currentYear);
       this.$emit("update", {
         year: this.currentYear,
         month: null,

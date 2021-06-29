@@ -68,7 +68,6 @@ export default {
     },
     previousYear: function() {
       this.currentYear -= 1;
-      this.$emit("update");
       this.$emit("update", {
         year: this.currentYear,
         month: this.currentMonthNumber,
