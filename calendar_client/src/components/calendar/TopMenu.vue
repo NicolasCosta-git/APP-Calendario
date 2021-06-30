@@ -100,9 +100,9 @@ export default {
 
 .action ul li a {
   text-decoration: none;
-  border-bottom: 1px solid #2c3e5080;
+  border-bottom: 1px solid #2c3e5083;
   font-weight: 600;
-  color: #2c3e50;
+  color: #2c3e50e7;
 }
 
 @media only screen and (max-width: 1733px) {
