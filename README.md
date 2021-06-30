@@ -9,7 +9,7 @@
 - Editar eventos;
 - Deletar eventos;
 
-#Como executar:
+# Como executar:
 
 ### necessário ter npm e mysql instalado
 
