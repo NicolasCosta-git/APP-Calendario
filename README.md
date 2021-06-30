@@ -2,7 +2,7 @@
 
 ### Um app feito em Vue e Node onde o usuário consegue agendar eventos na data escolhida
 
-# Funções
+## Funções
 
 ### O usuário pode: 
 
