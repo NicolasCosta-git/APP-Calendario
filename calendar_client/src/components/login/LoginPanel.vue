@@ -6,26 +6,26 @@
           <h1>Faça o login</h1>
         </div>
         <div class="card-body">
-          <form action="">
-            <input
-              type="text"
-              name="email"
-              class="email-input"
-              placeholder="Digite seu email..."
-            />
-            <input
-              type="password"
-              name="password"
-              class="password-input"
-              placeholder="Digite sua senha..."
-            />
-            <button class="login-button">Entrar</button>
-          </form>
+          <p class="error" v-if="error != undefined">* {{ error }}</p>
+          <input
+            type="text"
+            name="email"
+            class="email-input"
+            placeholder="Digite seu email..."
+            v-model="email"
+          />
+          <input
+            type="password"
+            v-model="password"
+            class="password-input"
+            placeholder="Digite sua senha..."
+          />
+          <button @click="login()" class="login-button">Entrar</button>
           <div class="links">
-            <a href="#" class="forgot-password">Esqueceu sua senha ?</a>
+            <!-- <a href="#" class="forgot-password">Esqueceu sua senha ?</a> -->
             <span>
-              <a href="#" class="new-account"
-                >Ainda não possui uma conta ?</a
+              <router-link :to="{name: 'register'}" class="new-account"
+                >Ainda não possui uma conta ?</router-link
               ></span
             >
           </div>
@@ -36,7 +36,34 @@
 </template>
 
 <script>
-export default {};
+import axios from "axios";
+
+export default {
+  data() {
+    return {
+      email: "",
+      password: "",
+      error: undefined,
+    };
+  },
+  methods: {
+    login() {
+      this.error = undefined;
+      axios
+        .post("http://localhost:3030/login", {
+          email: this.email,
+          password: this.password,
+        })
+        .then((res) => {
+          localStorage.setItem("token", res.data);
+          this.$router.push({ name: "calendar" });
+        })
+        .catch((err) => {
+          this.error = err.response.data.error;
+        });
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -63,6 +90,7 @@ export default {};
   height: 375px;
   background-color: #e9e7e7;
   overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.11);
 }
 
 .login-card h1 {
@@ -73,6 +101,10 @@ export default {};
 
 .card-body {
   padding: 20px;
+}
+
+.error {
+  color: rgba(221, 22, 22, 0.76);
 }
 
 .card-body input {
@@ -117,6 +149,7 @@ export default {};
   background: #b2dfdb;
   font-size: 1.3em;
   color: #2c3e50;
+  margin-bottom: 20px;
 }
 
 .login-button:focus {

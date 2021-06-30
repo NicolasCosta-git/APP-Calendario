@@ -11,7 +11,7 @@ class Events {
           year: data.date.year,
           title: data.title,
           startingTime: data.time.startingTime,
-          endingTime: data.time.startingTime,
+          endingTime: data.time.endingTime,
           description: data.description,
         })
         .table("Events");
@@ -33,7 +33,7 @@ class Events {
           year: data.date.year,
           title: data.title,
           startingTime: data.time.startingTime,
-          endingTime: data.time.startingTime,
+          endingTime: data.time.endingTime,
           description: data.description,
         })
         .where({ id: data.id })

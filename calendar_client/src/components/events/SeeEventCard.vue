@@ -1,72 +1,188 @@
 <template>
-  <form action="">
-    <div class="see-event-card">
-      <div class="event-card">
-        <div class="card-header">
-          <a href="" class="exit-button"
-            ><img src="../../assets/x-mark.png" alt=""
-          /></a>
-          <h1>Nome do Evento</h1>
-        </div>
-        <div class="event-details">
+  <div class="see-event-card">
+    <div class="event-card">
+      <div class="card-header">
+        <a href="#" @click="closePopup()" class="exit-button"
+          ><img src="../../assets/x-mark.png" alt=""
+        /></a>
+        <h1>{{ title }}</h1>
+      </div>
+      <div class="event-details">
+        <p class="error" v-if="error !== undefined">*{{ error }}</p>
+        <input
+          type="text"
+          v-model="title"
+          placeholder="Nome do evento"
+          class="event-name"
+        />
+        <div class="time-panel">
+          <label for="time" class="time-label"> Começa às:</label>
           <input
-            type="text"
-            name="eventName"
-            placeholder="Nome do evento"
-            class="event-name"
+            type="time"
+            v-model="time.startingTime"
+            id="time"
+            class="event-time"
           />
-          <div class="time-panel">
-            <label for="time" class="time-label"> Começa às:</label>
-            <input type="time" name="time" id="time" class="event-time" />
-          </div>
-          <div class="time-panel">
-            <label for="time" class="time-label"> Termina às:</label>
-            <input type="time" name="time" id="time" class="event-time" />
-          </div>
-          <div class="date-panel">
-            <label for="date" class="date-label">Dia do evento: </label>
-            <input name="date" id="date" type="date" class="event-date" />
-          </div>
-          <textarea
-            name="event-description"
-            id=""
-            cols="30"
-            rows="10"
-            placeholder="Descrição do evento"
-            class="event-description"
-          ></textarea>
-          <div class="button-panel">
-            <button type="submit" class="save-button">
-              Salvar
-            </button>
-            <button class="delete-button">
-              Deletar
-            </button>
-          </div>
+        </div>
+        <div class="time-panel">
+          <label for="time" class="time-label"> Termina às:</label>
+          <input
+            type="time"
+            v-model="time.endingTime"
+            id="time"
+            class="event-time"
+          />
+        </div>
+        <div class="date-panel">
+          <label for="date" class="date-label">Dia do evento: </label>
+          <input
+            v-model="stringDate"
+            id="date"
+            type="date"
+            class="event-date"
+          />
+        </div>
+        <textarea
+          v-model="description"
+          id=""
+          cols="30"
+          rows="10"
+          placeholder="Descrição do evento"
+          class="event-description"
+        ></textarea>
+        <div class="button-panel">
+          <button @click="updateEvent()" type="submit" class="save-button">
+            Salvar
+          </button>
+          <button @click="deleteEvent()" class="delete-button">
+            Deletar
+          </button>
         </div>
       </div>
     </div>
-  </form>
+  </div>
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   data() {
     return {
+      req: {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      },
+      stringDate: null,
       dataDay: null,
       dataMonth: null,
+      error: undefined,
+      id: undefined,
+      user_id: undefined,
+      title: undefined,
+      date: {
+        day: undefined,
+        month: undefined,
+        year: undefined,
+      },
+      time: {
+        startingTime: undefined,
+        endingTime: undefined,
+      },
+      description: undefined,
     };
   },
   props: {
-    day: Number,
-    year: Number,
-    month: Number,
+    Pid: Number,
+    Puser_id: Number,
+    Pday: Number,
+    Pyear: Number,
+    Pmonth: Number,
+    Ptitle: String,
+    PstartingTime: String,
+    PendingTime: String,
+    Pdescription: String,
+  },
+  methods: {
+    fillData: function() {
+      this.id = this.Pid;
+      this.user_id = this.Puser_id;
+      this.title = this.Ptitle;
+      this.date.day = this.Pday;
+      this.date.month = this.Pmonth;
+      this.date.year = this.Pyear;
+      this.time.startingTime = this.PstartingTime;
+      this.time.endingTime = this.PendingTime;
+      this.description = this.Pdescription;
+    },
+    updateEvent: function() {
+      this.error = undefined;
+      this.transformDate();
+      axios
+        .post(
+          "http://localhost:3030/updateevent",
+          {
+            id: this.id,
+            user_id: this.user_id,
+            title: this.title,
+            date: this.date,
+            time: this.time,
+            description: this.description,
+          },
+          this.req
+        )
+        .then((res) => {
+          console.log(res);
+          this.$emit("hidePopup");
+          window.location.reload();
+        })
+        .catch((err) => {
+          this.error = err.response.data.error;
+          console.log(err.response.data.error);
+        });
+    },
+    deleteEvent: async function() {
+      this.error = undefined;
+      await axios
+        .delete(
+          "http://localhost:3030/deleteevent/" + this.user_id + "/" + this.id,
+          this.req
+        )
+        .then(() => {
+          this.closePopup();
+          window.location.reload();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    convertDate: function() {
+      this.date.day < 10
+        ? (this.dataDay = "0" + this.date.day)
+        : (this.dataDay = this.date.day);
+      this.date.month < 10
+        ? (this.dataMonth = "0" + (this.date.month + 1))
+        : (this.dataMonth = this.date.month + 1);
+      this.stringDate =
+        this.date.year + "-" + this.dataMonth + "-" + this.dataDay;
+      return;
+    },
+    transformDate: function() {
+      let date = new Date(this.stringDate).toLocaleString("en-US");
+      date = this.stringDate.replace(/\b0/g, "");
+      date = date.split("-");
+      this.date.day = date[2];
+      this.date.month = parseInt(date[1]) - 1;
+      this.date.year = date[0];
+    },
+    closePopup: function() {
+      this.$emit("hidePopup");
+    },
   },
   created() {
-    this.day < 10 ? (this.dataDay = "0" + this.day) : (this.dataDay = this.day);
-    this.month < 10
-      ? (this.dataMonth = "0" + (this.month + 1))
-      : (this.dataMonth = this.month + 1);
+    this.fillData();
+    this.convertDate();
   },
 };
 </script>
@@ -76,7 +192,7 @@ export default {
   position: fixed;
   height: 100vh;
   width: 100%;
-  display: flex; /* flex */
+  display: flex;
   justify-content: center;
   border: 1px solid;
   backdrop-filter: blur(10px);
@@ -90,7 +206,7 @@ export default {
   margin: auto;
   width: 600px;
   border-radius: 13px;
-  height: 800px;
+  height: 830px;
   background-color: #e9e7e7;
   overflow: hidden;
   border: 1px solid rgba(0, 0, 0, 0.212);
@@ -242,6 +358,11 @@ export default {
 .event-date:focus {
   outline: none;
   box-shadow: 0 0 3pt 2pt rgba(0, 0, 0, 0.05);
+}
+
+.error {
+  color: rgba(221, 22, 22, 0.76);
+  padding-bottom: 10px;
 }
 
 .exit-button {

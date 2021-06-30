@@ -1,67 +1,27 @@
 <template>
   <div>
     <div class="event-panel">
-      <a href="" class="exit-button"
+      <router-link :to="{ name: 'calendar' }" class="exit-button"
         ><img src="../../assets/x-mark.png" alt=""
-      /></a>
+      /></router-link>
       <div class="event-header">
         <h1>Seus eventos</h1>
       </div>
       <div class="event-grid">
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
+        <div v-for="event in events" :key="event.id">
+          <EventCard
+            :day="event.day"
+            :description="event.description"
+            :endingTime="event.endingTime"
+            :id="event.id"
+            :month="event.month"
+            :startingTime="event.startingTime"
+            :title="event.title"
+            :user_id="event.user_id"
+            :year="event.year"
+            @showEvent="showPopup($event)"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -69,10 +29,56 @@
 
 <script>
 import EventCard from "./EventCard.vue";
+import axios from "axios";
+
 export default {
   name: "EventsPanel",
   components: {
     EventCard,
+  },
+  data() {
+    return {
+      req: {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      },
+      user_id: undefined,
+      events: [],
+    };
+  },
+  methods: {
+    getUser: async function() {
+      await axios
+        .post("http://localhost:3030/validate", {}, this.req)
+        .then((res) => {
+          this.user_id = res.data.data.id;
+        })
+        .catch(() => {
+          localStorage.removeItem("token");
+          this.$router.push({ name: "login" });
+        });
+    },
+    getEvents: async function() {
+      await axios
+        .get("http://localhost:3030/getall/" + this.user_id, this.req)
+        .then((res) => {
+          this.events = res.data.data;
+        })
+        .catch((err) => {
+          console.log(err.params.error);
+        });
+    },
+    showPopup: function(event) {
+      this.$emit("showEvent", { event });
+    },
+    closePanel: function() {
+      this.$router.push({ name: "calendar" });
+    },
+  },
+  async created() {
+    await this.getUser();
+    await this.getEvents();
   },
 };
 </script>
@@ -105,9 +111,8 @@ export default {
   margin: auto;
   border: 1px solid rgba(0, 0, 0, 0.185);
   background: #e9e7e7;
-  grid-template-columns: repeat(auto-fill, minmax(26%, 26%));
   display: inline-grid;
-  gap: 0px 0px;
+  gap: 0px 50px;
   width: 100%;
   float: right;
   height: 710px;
@@ -128,5 +133,23 @@ export default {
   right: 10px;
   float: right;
   opacity: 0.62;
+}
+
+@media only screen and (min-width: 1733px) {
+  .event-grid {
+    grid-template-columns: repeat(auto-fill, minmax(26%, 26%));
+  }
+}
+
+@media only screen and (max-width: 1733px) {
+  .event-grid {
+    grid-template-columns: repeat(auto-fill, minmax(40%, 40%));
+  }
+}
+
+@media only screen and (max-width: 1233px) {
+  .event-grid {
+    grid-template-columns: repeat(auto-fill, minmax(90%, 90%));
+  }
 }
 </style>

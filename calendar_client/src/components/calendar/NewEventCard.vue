@@ -1,51 +1,80 @@
 <template>
-  <form action="">
-    <div class="new-event-card">
-      <div class="event-card">
-        <div class="card-header">
-          <a href="" class="exit-button"
-            ><img src="../../assets/x-mark.png" alt=""
-          /></a>
-          <h1>{{ dataDay }}/{{ dataMonth }}/{{ year }} - Novo Evento</h1>
-        </div>
-        <div class="event-details">
+  <div class="new-event-card">
+    <div class="event-card">
+      <div class="card-header">
+        <a @click="closePopup()" href="#" class="exit-button"
+          ><img src="../../assets/x-mark.png" alt=""
+        /></a>
+        <h1>{{ dataDay }}/{{ dataMonth }}/{{ year }} - Novo Evento</h1>
+      </div>
+      <div class="event-details">
+        <p class="error" v-if="error !== undefined">*{{ error }}</p>
+        <input
+          type="text"
+          v-model="title"
+          placeholder="Nome do evento"
+          class="event-name"
+        />
+        <div class="time-panel">
+          <label for="time" class="time-label"> Começa às:</label>
           <input
-            type="text"
-            name="eventName"
-            placeholder="Nome do evento"
-            class="event-name"
+            type="time"
+            v-model="time.startingTime"
+            id="time"
+            class="event-time"
           />
-          <div class="time-panel">
-            <label for="time" class="time-label"> Começa às:</label>
-            <input type="time" name="time" id="time" class="event-time" />
-          </div>
-          <div class="time-panel">
-            <label for="time" class="time-label"> Termina às:</label>
-            <input type="time" name="time" id="time" class="event-time" />
-          </div>
-          <textarea
-            name="event-description"
-            id=""
-            cols="30"
-            rows="10"
-            placeholder="Descrição do evento"
-            class="event-description"
-          ></textarea>
-          <button type="submit" class="event-button">
-            Criar
-          </button>
         </div>
+        <div class="time-panel">
+          <label for="time" class="time-label"> Termina às:</label>
+          <input
+            type="time"
+            v-model="time.endingTime"
+            id="time"
+            class="event-time"
+          />
+        </div>
+        <textarea
+          v-model="description"
+          id=""
+          cols="30"
+          rows="10"
+          placeholder="Descrição do evento"
+          class="event-description"
+        ></textarea>
+        <button @click="createEvent()" type="submit" class="event-button">
+          Criar
+        </button>
       </div>
     </div>
-  </form>
+  </div>
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   data() {
     return {
+      req: {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      },
       dataDay: null,
       dataMonth: null,
+      error: undefined,
+      user_id: undefined,
+      title: undefined,
+      date: {
+        day: undefined,
+        month: undefined,
+        year: undefined,
+      },
+      time: {
+        startingTime: undefined,
+        endingTime: undefined,
+      },
+      description: undefined,
     };
   },
   props: {
@@ -53,7 +82,51 @@ export default {
     year: Number,
     month: Number,
   },
-  created() {
+  methods: {
+    getUser: async function() {
+      await axios
+        .post("http://localhost:3030/validate", {}, this.req)
+        .then((res) => {
+          this.user_id = res.data.data.id;
+        })
+        .catch(() => {
+          localStorage.removeItem("token");
+          this.$router.push({ name: "login" });
+        });
+    },
+    createEvent: async function() {
+      this.error = undefined;
+      axios
+        .post(
+          "http://localhost:3030/newevent",
+          {
+            user_id: this.user_id,
+            title: this.title,
+            date: this.date,
+            time: this.time,
+            description: this.description,
+          },
+          this.req
+        )
+        .then(() => {
+          this.$router.go(0);
+          this.closePopup();
+          return;
+        })
+        .catch((err) => {
+          console.log(err.response);
+          this.error = err.response.data.error;
+        });
+    },
+    closePopup: function() {
+      this.$emit("closePopup");
+    },
+  },
+  async created() {
+    await this.getUser();
+    this.date.day = this.day;
+    this.date.year = this.year;
+    this.date.month = this.month;
     this.day < 10 ? (this.dataDay = "0" + this.day) : (this.dataDay = this.day);
     this.month < 10
       ? (this.dataMonth = "0" + (this.month + 1))
@@ -81,7 +154,7 @@ export default {
   margin: auto;
   width: 600px;
   border-radius: 13px;
-  height: 700px;
+  height: 730px;
   background-color: #e9e7e7;
   border: 1px solid rgba(0, 0, 0, 0.212);
   overflow: hidden;
@@ -182,6 +255,11 @@ export default {
   background-color: #b4e2de;
   color: #354a5ff3;
   cursor: pointer;
+}
+
+.error {
+  color: rgba(221, 22, 22, 0.76);
+  padding-bottom: 10px;
 }
 
 .exit-button {

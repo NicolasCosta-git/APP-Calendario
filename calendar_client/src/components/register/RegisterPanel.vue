@@ -6,24 +6,25 @@
           <h1>Registre-se</h1>
         </div>
         <div class="card-body">
-          <form action="">
-            <input
-              type="text"
-              name="email"
-              class="email-input"
-              placeholder="Digite seu email..."
-            />
-            <input
-              type="password"
-              name="password"
-              class="password-input"
-              placeholder="Digite sua senha..."
-            />
-            <button class="register-button">Registrar</button>
-          </form>
+          <p class="error" v-if="error != undefined">* {{ error }}</p>
+          <input
+            type="text"
+            class="email-input"
+            placeholder="Digite seu email..."
+            v-model="email"
+          />
+          <input
+            type="password"
+            class="password-input"
+            placeholder="Digite sua senha..."
+            v-model="password"
+          />
+          <button @click="register()" class="register-button">Registrar</button>
           <div class="links">
             <span>
-              <a href="#" class="have-account">Já possui uma conta ?</a></span
+              <router-link :to="{ name: 'login' }" class="have-account"
+                >Já possui uma conta ?</router-link
+              ></span
             >
           </div>
         </div>
@@ -33,7 +34,34 @@
 </template>
 
 <script>
-export default {};
+import axios from "axios";
+
+export default {
+  data() {
+    return {
+      email: "",
+      password: "",
+      error: undefined,
+    };
+  },
+  methods: {
+    register() {
+      this.error = undefined;
+      axios
+        .post("http://localhost:3030/register", {
+          email: this.email,
+          password: this.password,
+        })
+        .then(() => {
+          console.log("a");
+          this.$router.push({ name: "login" });
+        })
+        .catch((err) => {
+          this.error = err.response.data.error;
+        });
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -57,7 +85,7 @@ export default {};
   margin-top: 5%;
   width: 600px;
   border-radius: 13px;
-  height: 335px;
+  height: 345px;
   background-color: #e9e7e7;
   overflow: hidden;
 }
@@ -66,6 +94,10 @@ export default {};
   padding: 25px;
   font-size: 2.5em;
   background-color: #b2dfdb;
+}
+
+.error {
+  color: rgba(221, 22, 22, 0.76);
 }
 
 .card-body {

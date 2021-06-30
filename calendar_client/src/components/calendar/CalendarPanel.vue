@@ -17,6 +17,7 @@
         :day="popupData.day"
         :month="popupData.month"
         :year="popupData.year"
+        @closePopup="hidePopup()"
       />
     </div>
     <div class="days-panel">
@@ -35,12 +36,24 @@
             />
           </div>
           <div v-else>
-            <DateCard
-              :day="day"
-              :month="currentMonth"
-              :year="currentYear"
-              @newPopup="showPopup($event.day)"
-            />
+            <div v-if="findEvent(day)">
+              <DateCard
+                :day="day"
+                :month="currentMonth"
+                :year="currentYear"
+                :event="true"
+                @newPopup="showPopup($event.day)"
+              />
+            </div>
+            <div v-else>
+              <DateCard
+                :day="day"
+                :month="currentMonth"
+                :year="currentYear"
+                :event="false"
+                @newPopup="showPopup($event.day)"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -61,12 +74,19 @@ import TopYearSelector from "./TopYearSelector.vue";
 import NewEventCard from "./NewEventCard.vue";
 import FloatMenu from "./FloatMenu.vue";
 import TopMenu from "./TopMenu.vue";
+import axios from "axios";
 
 export default {
   data() {
     return {
+      req: {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      },
       currentYear: null,
-      currenthMonth: null,
+      currentMonth: null,
+      schedule: [],
       dayCount: null,
       allowPopup: false,
       popupData: {
@@ -74,6 +94,8 @@ export default {
         month: null,
         year: null,
       },
+      user_id: null,
+      events: [],
     };
   },
   props: {
@@ -111,21 +133,68 @@ export default {
       this.dayCount = dayCount;
       this.currentMonth = month;
       this.currentYear = year;
+      this.schedule = [];
+      this.checkEvent();
     },
     showPopup: function(day) {
       this.popupData.day = day;
-      this.popupData.month = this.currenthMonth;
+      this.popupData.month = this.currentMonth;
       this.popupData.year = this.currentYear;
       this.allowPopup = true;
     },
+    hidePopup: function() {
+      this.allowPopup = false;
+    },
     checkToday() {
       if ((this.currenthMonth = new Date().getMonth())) {
-        console.log(this.currenthMonth);
         return true;
       }
     },
+    getUser: async function() {
+      await axios
+        .post("http://localhost:3030/validate", {}, this.req)
+        .then((res) => {
+          this.user_id = res.data.data.id;
+        })
+        .catch(() => {
+          localStorage.removeItem("token");
+          this.$router.push({ name: "login" });
+        });
+    },
+    getEvents: async function() {
+      await axios
+        .get("http://localhost:3030/getall/" + this.user_id, this.req)
+        .then((res) => {
+          this.events = res.data.data;
+        })
+        .catch((err) => {
+          console.log(err.params.error);
+        });
+    },
+    checkEvent: function() {
+      this.events.forEach((event) => {
+        this.dayCount.forEach((day) => {
+          if (
+            event.day == day &&
+            event.year == this.currentYear &&
+            event.month == this.currentMonth
+          ) {
+            return this.schedule.push(day);
+          }
+        });
+      });
+    },
+    findEvent: function(day) {
+      return !!this.schedule.find((event) => {
+        return event == day;
+      });
+    },
   },
-  created() {
+  async created() {
+    if (!this.fake) {
+      await this.getUser();
+      await this.getEvents();
+    }
     this.currentYear = new Date().getFullYear();
     this.currentMonth = new Date().getMonth();
     this.buildCalendar(new Date().getFullYear(), new Date().getMonth());

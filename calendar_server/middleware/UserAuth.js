@@ -9,11 +9,16 @@ module.exports = function (req, res, next) {
     let token = bearer[1];
     try {
       let decoded = jwt.verify(token, secret);
+      req.body.data = decoded;
+      next();
+      return;
     } catch (err) {
       res.status(403);
-      res.json({ error: "invalid password" });
+      res.json({ valid: false, error: "invalid password" });
+      return;
     }
   }
   res.status(403);
-  res.json({ error: "invalid password" });
+  res.json({ valid: false, error: "invalid password" });
+  return;
 };

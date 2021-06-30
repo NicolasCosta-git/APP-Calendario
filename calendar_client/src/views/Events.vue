@@ -1,13 +1,24 @@
 <template>
   <div>
     <div>
-      <EventsPanel />
+      <EventsPanel @showEvent="showPopup($event)" />
     </div>
     <div>
       <CalendarPanel :fake="true" />
     </div>
-    <div>
-      <SeeEventCard />
+    <div v-if="showPopupCard">
+      <SeeEventCard
+        :Pid="popupData.Pid"
+        :Puser_id="popupData.Puser_id"
+        :Pday="popupData.Pday"
+        :Pyear="popupData.Pyear"
+        :Pmonth="popupData.Pmonth"
+        :Ptitle="popupData.Ptitle"
+        :PstartingTime="popupData.PstartingTime"
+        :PendingTime="popupData.PendingTime"
+        :Pdescription="popupData.Pdescription"
+        @hidePopup="closePopup()"
+      />
     </div>
   </div>
 </template>
@@ -23,6 +34,39 @@ export default {
     EventsPanel,
     CalendarPanel,
     SeeEventCard,
+  },
+  data() {
+    return {
+      showPopupCard: false,
+      popupData: {
+        Pid: null,
+        Puser_id: null,
+        Pday: null,
+        Pyear: null,
+        Pmonth: null,
+        Ptitle: null,
+        PstartingTime: null,
+        Pdescription: null,
+        PendingTime: null,
+      },
+    };
+  },
+  methods: {
+    showPopup: function(data) {
+      this.popupData.Pid = data.event.id;
+      this.popupData.Puser_id = data.event.user_id;
+      this.popupData.Pday = data.event.day;
+      this.popupData.Pyear = data.event.year;
+      this.popupData.Pmonth = data.event.month;
+      this.popupData.Ptitle = data.event.title;
+      this.popupData.PstartingTime = data.event.startingTime;
+      this.popupData.Pdescription = data.event.description;
+      this.popupData.PendingTime = data.event.endingTime;
+      this.showPopupCard = true;
+    },
+    closePopup: function() {
+      this.showPopupCard = false;
+    },
   },
 };
 </script>

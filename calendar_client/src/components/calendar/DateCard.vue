@@ -3,12 +3,30 @@
     <div
       :class="{
         'date-card today': empty !== true && today(),
+        'date-card event': empty !== true && event == true,
         'date-card': empty !== true,
         'empty-card': empty == true,
       }"
     >
-      <h1>{{ day }}</h1>
+      <h1>
+        {{ day }}
+      </h1>
       <div v-if="fake !== true">
+        <div v-if="event == true">
+          <router-link
+            :to="{ name: 'events' }"
+            href="#"
+            @click="events()"
+            :class="{
+              'new-event': empty !== undefined,
+              'empty-card': empty == true,
+            }"
+          >
+            <div class="event-notification">
+              <img src="../../assets/mini-calendar.png" alt="" /> Ver eventos
+            </div></router-link
+          >
+        </div>
         <div
           :class="{
             'new-event': empty !== undefined,
@@ -33,9 +51,12 @@ export default {
     year: Number,
     empty: Boolean,
     fake: Boolean,
+    event: Boolean,
   },
   data() {
-    return {};
+    return {
+      eventDays: [],
+    };
   },
   methods: {
     newPopup() {
@@ -51,6 +72,9 @@ export default {
       }
       return false;
     },
+    events() {
+      console.log("a");
+    },
   },
 };
 </script>
@@ -62,6 +86,10 @@ export default {
   overflow: hidden;
   min-height: 155px;
   transition: transform 100ms ease-in-out;
+}
+
+a {
+  text-decoration: none;
 }
 
 .date-card h1 {
@@ -100,6 +128,16 @@ export default {
   font-weight: 300;
 }
 
+.event-notification {
+  width: 100%;
+  font-size: 1.1em;
+  color: #2c3e50;
+}
+.event-notification img {
+  position: relative;
+  top: 3px;
+}
+
 .today {
   background-color: #b2dfdb36 !important;
 }
@@ -109,6 +147,10 @@ export default {
 }
 .date-card:hover .new-event {
   display: flex;
+}
+
+.event {
+  background-color: #a3a3a362 !important;
 }
 
 @media only screen and (max-width: 1733px) {
@@ -122,6 +164,10 @@ export default {
   .new-event a {
     padding-left: 0px;
     padding-right: 6px;
+    font-size: 0.97em;
+  }
+
+  .event-notification {
     font-size: 0.97em;
   }
 }

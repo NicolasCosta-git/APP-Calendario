@@ -4,6 +4,7 @@ class EventController {
     if (
       user_id == undefined ||
       date == undefined ||
+      title == undefined ||
       date.day == undefined ||
       date.month == undefined ||
       date.year == undefined ||
@@ -12,22 +13,22 @@ class EventController {
       description == undefined
     ) {
       res.status(406);
-      res.json({ error: "Missing parameters" });
+      res.json({ error: "Preencha todos os campos !" });
       return;
     }
     try {
       if ((await Event.findTitle(title, req.body.user_id)).status) {
         res.status(406);
-        res.json({ error: "Event already exists" });
+        res.json({ error: "Já existe um evento com este nome" });
         return;
       }
       await Event.create(req.body);
       res.status(200);
-      res.json({ success: "Event created" });
+      res.json({ success: "Evento criado" });
       return;
     } catch (err) {
       res.status(406);
-      res.json({ error: "Failed creating event" });
+      res.json({ error: "Falha ao criar evento" });
       console.log(err);
       return;
     }
@@ -52,22 +53,26 @@ class EventController {
     }
     try {
       let event = await Event.findTitle(req.body.title, req.body.user_id);
-      console.log(event.data[0].title);
       if (
         event.status &&
         event.data[0].title == req.body.title &&
         event.data[0].id == req.body.id
       ) {
         req.body.title = undefined;
-      } else {
+      }
+      if (
+        event.status &&
+        event.data[0].title == req.body.title &&
+        event.data[0].id !== req.body.id
+      ) {
         res.status(406);
-        res.json({ error: "Event already exists" });
+        res.json({ error: "Já existe um evento com este nome" });
         return;
       }
 
       await Event.update(req.body);
       res.status(200);
-      res.json({ success: "Event updated" });
+      res.json({ success: "Evento atualizado" });
       return;
     } catch (err) {
       res.status(406);
@@ -134,7 +139,7 @@ class EventController {
           res.json({ data: event });
           return;
         }
-        res.status(406);
+        res.status(200);
         res.json({ data: [], error: "Unable to retreive data" });
         return;
       } catch (err) {

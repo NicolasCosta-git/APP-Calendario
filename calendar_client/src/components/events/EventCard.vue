@@ -1,26 +1,87 @@
 <template>
   <div class="event-card">
     <div class="event-header">
-      <h2>Titulo - data</h2>
+      <h2>
+        <span class="header-title">{{ title }}</span> - {{ dataDay }}/{{
+          dataMonth
+        }}/{{ year }}
+      </h2>
     </div>
     <div class="event-body">
-      <div class="starting-time">
-        começa: ......
-      </div>
-      <div class="ending-time">
-        termina ......
-      </div>
-      <div class="description">descricao</div>
+      <div class="starting-time">começa: {{ startingTime }}</div>
+      <div class="ending-time">termina {{ endingTime }}</div>
+      <div class="description">{{ description }}</div>
     </div>
     <div class="button-container">
-      <button class="see-button">Ver</button>
-      <button class="delete-button">Deletar</button>
+      <button @click="seeEvent()" class="see-button">Ver</button>
+      <button @click="deleteEvent()" class="delete-button">Deletar</button>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+import axios from "axios";
+export default {
+  data() {
+    return {
+      dataDay: null,
+      dataMonth: null,
+      req: {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      },
+    };
+  },
+  props: {
+    id: Number,
+    user_id: Number,
+    day: Number,
+    year: Number,
+    month: Number,
+    title: String,
+    startingTime: String,
+    endingTime: String,
+    description: String,
+  },
+  methods: {
+    seeEvent: function() {
+      this.$emit("showEvent", {
+        id: this.id,
+        user_id: this.user_id,
+        day: this.day,
+        year: this.year,
+        month: this.month,
+        title: this.title,
+        startingTime: this.startingTime,
+        endingTime: this.endingTime,
+        description: this.description,
+      });
+      return;
+    },
+    deleteEvent: async function() {
+      this.error = undefined;
+      await axios
+        .delete(
+          "http://localhost:3030/deleteevent/" + this.user_id + "/" + this.id,
+          this.req
+        )
+        .then(() => {
+          this.$emit("hidePopup");
+          window.location.reload();
+        })
+        .catch((err) => {
+          console.log(err.response.data.error);
+        });
+    },
+  },
+  created() {
+    this.day < 10 ? (this.dataDay = "0" + this.day) : (this.dataDay = this.day);
+    this.month < 10
+      ? (this.dataMonth = "0" + (this.month + 1))
+      : (this.dataMonth = this.month + 1);
+  },
+};
 </script>
 
 <style scoped>
@@ -47,8 +108,9 @@ export default {};
 .starting-time {
   display: inline-block;
   width: 50%;
-  padding: 10px 0px 10px 10px;
+  padding: 13px 0px 10px 10px;
   font-size: 1.3em;
+  text-align: center;
 }
 
 .ending-time {
@@ -56,12 +118,25 @@ export default {};
   width: 50%;
   padding: 10px 0px 10px 10px;
   font-size: 1.3em;
+  text-align: center;
 }
 
 .description {
-  white-space: pre;
-  padding: 5px 10px;
+  padding: 15px 30px 0px 30px;
   font-size: 1.1em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.header-title {
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 200px;
+  height: 30px;
 }
 
 .event-card button {
@@ -87,12 +162,23 @@ export default {};
   width: 40%;
   margin-left: 8px;
   background-color: #ff6152de;
-  color: #532020c7;
+  color: #1b0c0cc7;
+}
+
+.delete-button:hover {
+  background-color: #ff61529d;
+  color: #241010de;
+  cursor: pointer;
 }
 
 .see-button {
   background-color: #5eb9ffd0;
   margin-right: 8px;
-  color: #254257e5;
+  color: #0d161de5;
+}
+
+.see-button:hover {
+  background-color: #5eb9ff94;
+  cursor: pointer;
 }
 </style>

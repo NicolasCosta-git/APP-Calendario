@@ -13,18 +13,20 @@ class UserController {
       !/[A-Z0-9._%+-]+@[A-Z0-9-]+.+.[A-Z]{2,4}/gim.test(email)
     ) {
       res.status(406);
-      res.json({ error: "invalid email" });
+      res.json({ error: "Email inválido" });
       return;
     }
-    if (password == undefined) {
+    if (password == undefined || password.length < 5) {
       res.status(406);
-      res.json({ error: "invalid password" });
+      res.json({
+        error: "A senha deve conter pelo menos 5 caracteres",
+      });
       return;
     }
 
     if (await User.findEmail(email)) {
       res.status(406);
-      res.json({ error: "email already exists" });
+      res.json({ error: "Este e-mail já está cadastrado" });
       return;
     }
 
@@ -83,6 +85,12 @@ class UserController {
     }
     res.status(406);
     res.json({ status: "invalid credencials" });
+  }
+
+  async validateToken(req, res) {
+    res.status(200);
+    res.json({ valid: true, status: "success", data: req.body.data });
+    return;
   }
 }
 

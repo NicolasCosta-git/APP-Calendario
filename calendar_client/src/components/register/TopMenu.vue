@@ -1,19 +1,25 @@
 <template>
   <div class="top-menu">
     <div class="float-icon">
-      <h3><a href="#">Logar</a></h3>
+      <h3><a @click="logar()" href="#">Logar</a></h3>
       <div class="black-bar"></div>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  methods: {
+    logar: function() {
+      this.$router.push({ name: "login" });
+    },
+  },
+};
 </script>
 
 <style scoped>
 .top-menu {
-  display: block; /*inline*/
+  display: block;
   border: 1px solid rgba(0, 0, 0, 0.089);
   border-radius: 0px 0px 20px 20px;
   background-color: #b2dfdb;
@@ -50,5 +56,11 @@ export default {};
   margin-right: 7px;
   margin-left: 7px;
   margin-bottom: 10px;
+}
+
+@media only screen and (max-width: 1733px) {
+  .top-menu {
+    display: none;
+  }
 }
 </style>

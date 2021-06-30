@@ -1,14 +1,20 @@
 <template>
   <div class="top-menu">
     <div class="float-icon">
-      <h3><a href="#">Registre-se</a></h3>
+      <h3><a @click="register()" class="a" href="#">Registre-se</a></h3>
       <div class="black-bar"></div>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  methods: {
+    register: function() {
+      this.$router.push({ name: "register" });
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -31,7 +37,7 @@ export default {};
   font-size: 1.15em;
 }
 
-.float-icon h3 a {
+.float-icon h3 .a {
   text-decoration: none;
   padding-left: 10px;
   padding-right: 10px;
@@ -50,5 +56,11 @@ export default {};
   margin-right: 7px;
   margin-left: 7px;
   margin-bottom: 10px;
+}
+
+@media only screen and (max-width: 1733px) {
+  .top-menu {
+    display: none;
+  }
 }
 </style>
