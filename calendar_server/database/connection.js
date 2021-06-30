@@ -3,8 +3,8 @@ const knex = require("knex")({
   client: "mysql2",
   connection: {
     host: "localhost",
-    user: "root",
-    password: "1234",
+    user: "root", //coloque seu usuário aqui, caso não esteja usando root
+    password: "SUA SENHA", // coloque sua senha aqui
     database: "calendar",
   },
 });
