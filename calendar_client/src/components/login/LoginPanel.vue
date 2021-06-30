@@ -47,7 +47,8 @@ export default {
     };
   },
   methods: {
-    login() {
+    // efetua o login
+    login: function() {
       this.error = undefined;
       axios
         .post("http://localhost:3030/login", {
@@ -59,7 +60,9 @@ export default {
           this.$router.push({ name: "calendar" });
         })
         .catch((err) => {
-          this.error = err.response.data.error;
+          
+          this.error = err.response.data.status;
+          console.log(this.error)
         });
     },
   },
@@ -150,6 +153,10 @@ export default {
   font-size: 1.3em;
   color: #2c3e50;
   margin-bottom: 20px;
+}
+
+.login-button:hover {
+  background-color: #4699924d;
 }
 
 .login-button:focus {

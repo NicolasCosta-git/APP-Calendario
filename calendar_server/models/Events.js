@@ -1,6 +1,7 @@
 const knex = require("../database/connection");
 
 class Events {
+  // cria evento no banco
   async create({ ...data }) {
     try {
       await knex
@@ -22,6 +23,7 @@ class Events {
     }
   }
 
+  // altera evento no banco
   async update({ ...data }) {
     try {
       await knex
@@ -45,6 +47,7 @@ class Events {
     }
   }
 
+  // encontra evento pelo título
   async findTitle(title, user_id) {
     try {
       let event = await knex
@@ -59,6 +62,7 @@ class Events {
     }
   }
 
+  // retorna todos os eventos
   async getAll(user_id) {
     try {
       let event = await knex.select("*").from("Events").where({ user_id });
@@ -69,6 +73,7 @@ class Events {
     }
   }
 
+  // retorna o evento pelo id
   async getById(user_id, id) {
     try {
       let event = await knex.select("*").from("Events").where({ user_id, id });
@@ -79,6 +84,7 @@ class Events {
     }
   }
 
+  // deleta o evento
   async delete(user_id, id) {
     try {
       let event = await knex.delete().where({ user_id, id }).table("Events");

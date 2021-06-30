@@ -56,9 +56,11 @@ export default {
     };
   },
   methods: {
+    // retorna o ano atual
     getCurrentYear: function() {
       return new Date().getFullYear();
     },
+    // retorna o próximo ano
     nextYear: function() {
       this.currentYear += 1;
       this.$emit("update", {
@@ -66,6 +68,7 @@ export default {
         month: this.currentMonthNumber,
       });
     },
+    // retorna o ano anterior
     previousYear: function() {
       this.currentYear -= 1;
       this.$emit("update", {
@@ -73,9 +76,11 @@ export default {
         month: this.currentMonthNumber,
       });
     },
+    // retorna o mês atual
     getCurrentMonth: function() {
       return new Date().getMonth();
     },
+    // troca o mês
     changeMonth: function(month) {
       this.currentMonth = this.months[month];
       this.currentMonthNumber = month;

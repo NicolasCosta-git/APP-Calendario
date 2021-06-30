@@ -45,7 +45,8 @@ export default {
     };
   },
   methods: {
-    register() {
+    // efetua o registro do usuário
+    register: function() {
       this.error = undefined;
       axios
         .post("http://localhost:3030/register", {
@@ -53,7 +54,6 @@ export default {
           password: this.password,
         })
         .then(() => {
-          console.log("a");
           this.$router.push({ name: "login" });
         })
         .catch((err) => {
@@ -146,6 +146,10 @@ export default {
   background: #b2dfdb;
   font-size: 1.3em;
   color: #2c3e50;
+}
+
+.register-button:hover {
+  background-color: #4699924d;
 }
 
 .register-button:focus {

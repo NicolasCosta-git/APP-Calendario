@@ -7,13 +7,13 @@ const UserAuth = require("../middleware/UserAuth");
 const UserController = require("../controllers/UserController");
 const EventController = require("../controllers/EventController");
 
-//user routes
+//rotas do usuário
 router.post("/register", UserController.create);
 router.post("/recoverpassword", UserController.recoverPassword);
 router.put("/changepassword", UserController.changePassword);
 router.post("/login", UserController.login);
 
-//event routes
+//rotas de evento
 router.post("/newevent", UserAuth, EventController.create);
 router.post("/updateevent", UserAuth, EventController.update);
 router.delete("/deleteevent/:user_id/:id", UserAuth, EventController.delete);

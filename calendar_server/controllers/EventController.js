@@ -1,4 +1,5 @@
 class EventController {
+  // cria o evento
   async create(req, res) {
     let { user_id, date, title, time, description } = req.body;
     if (
@@ -34,6 +35,7 @@ class EventController {
     }
   }
 
+  // altera o evento
   async update(req, res) {
     let { id, user_id, date, time, description } = req.body;
     if (
@@ -82,6 +84,7 @@ class EventController {
     }
   }
 
+  // deleta o evento
   async delete(req, res) {
     let { user_id, id } = req.params;
     if (id !== undefined && user_id !== undefined) {
@@ -105,6 +108,7 @@ class EventController {
     return;
   }
 
+  // pega o evento pelo id
   async getById(req, res) {
     let { user_id, id } = req.params;
     if (id !== undefined && user_id !== undefined) {
@@ -129,6 +133,7 @@ class EventController {
     res.json({ error: "Missing parameters" });
   }
 
+  // pega todos os eventos com o id do usuário
   async getAll(req, res) {
     let { user_id } = req.params;
     if (user_id !== undefined) {

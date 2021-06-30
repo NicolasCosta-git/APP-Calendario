@@ -48,6 +48,7 @@ export default {
     };
   },
   methods: {
+    // retorna o usuário
     getUser: async function() {
       await axios
         .post("http://localhost:3030/validate", {}, this.req)
@@ -59,6 +60,7 @@ export default {
           this.$router.push({ name: "login" });
         });
     },
+    // retorna os eventos
     getEvents: async function() {
       await axios
         .get("http://localhost:3030/getall/" + this.user_id, this.req)
@@ -69,9 +71,11 @@ export default {
           console.log(err.params.error);
         });
     },
+    // mostra o popup do evento
     showPopup: function(event) {
       this.$emit("showEvent", { event });
     },
+    // fecha o painel de eventos
     closePanel: function() {
       this.$router.push({ name: "calendar" });
     },

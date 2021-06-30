@@ -45,6 +45,7 @@ export default {
     description: String,
   },
   methods: {
+    // mostra card do evento
     seeEvent: function() {
       this.$emit("showEvent", {
         id: this.id,
@@ -59,6 +60,7 @@ export default {
       });
       return;
     },
+    // deleta o evento
     deleteEvent: async function() {
       this.error = undefined;
       await axios

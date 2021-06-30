@@ -83,6 +83,7 @@ export default {
     month: Number,
   },
   methods: {
+    // retorna o id do usuário
     getUser: async function() {
       await axios
         .post("http://localhost:3030/validate", {}, this.req)
@@ -94,6 +95,7 @@ export default {
           this.$router.push({ name: "login" });
         });
     },
+    // cria um novo evento
     createEvent: async function() {
       this.error = undefined;
       axios
@@ -118,6 +120,7 @@ export default {
           this.error = err.response.data.error;
         });
     },
+    // fecha o popup
     closePopup: function() {
       this.$emit("closePopup");
     },

@@ -2,6 +2,7 @@ const knex = require("../database/connection");
 const bcrypt = require("bcrypt");
 
 class User {
+  // cria um novo usuário
   async new(email, password) {
     try {
       let hash = await bcrypt.hash(password, Math.random());
@@ -11,6 +12,7 @@ class User {
     }
   }
 
+  // verifica se o email já existe
   async findEmail(email) {
     try {
       let result = await knex.select("*").from("Users").where({ email });
@@ -22,6 +24,7 @@ class User {
     }
   }
 
+  // encontra o usuário pelo email
   async findByEmail(email) {
     try {
       let result = await knex
@@ -37,6 +40,7 @@ class User {
     }
   }
 
+  // troca a senha
   async changePassword(password, id, token) {
     let hash = await bcrypt.hash(password, Math.random());
     await knex.update({ password: hash }).where({ id }).table("Users");

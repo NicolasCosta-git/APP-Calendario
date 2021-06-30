@@ -59,10 +59,12 @@ export default {
     };
   },
   methods: {
-    newPopup() {
+    // mostra popup
+    newPopup: function() {
       this.$emit("newPopup", { day: this.day });
     },
-    today() {
+    // verifica se o dia é hoje
+    today: function() {
       if (
         this.day == new Date().getDate() &&
         this.month == new Date().getMonth() &&
@@ -71,9 +73,6 @@ export default {
         return true;
       }
       return false;
-    },
-    events() {
-      console.log("a");
     },
   },
 };

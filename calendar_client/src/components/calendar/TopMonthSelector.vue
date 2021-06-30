@@ -33,9 +33,11 @@ export default {
     };
   },
   methods: {
+    // retorna o mês atual
     getCurrentMonth: function() {
       return new Date().getMonth();
     },
+    // retorna o próximo mês
     nextMonth: function() {
       if (this.currentMonthNumber < 11) {
         this.currentMonth = this.months[this.currentMonthNumber + 1];
@@ -49,6 +51,7 @@ export default {
         month: this.currentMonthNumber,
       });
     },
+    // retorna o mês anterior
     previousMonth: function() {
       if (this.currentMonthNumber == -1) {
         this.currentMonth = this.months[11];

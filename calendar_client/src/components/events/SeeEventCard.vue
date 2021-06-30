@@ -105,6 +105,7 @@ export default {
     Pdescription: String,
   },
   methods: {
+    //seta as variáveis com os dados do evento
     fillData: function() {
       this.id = this.Pid;
       this.user_id = this.Puser_id;
@@ -116,6 +117,7 @@ export default {
       this.time.endingTime = this.PendingTime;
       this.description = this.Pdescription;
     },
+    // faz update no evento
     updateEvent: function() {
       this.error = undefined;
       this.transformDate();
@@ -142,6 +144,7 @@ export default {
           console.log(err.response.data.error);
         });
     },
+    // deleta evento
     deleteEvent: async function() {
       this.error = undefined;
       await axios
@@ -157,6 +160,7 @@ export default {
           console.log(err);
         });
     },
+    // converte a data, adicionando 0 na frente dos números com dígitos únicos
     convertDate: function() {
       this.date.day < 10
         ? (this.dataDay = "0" + this.date.day)
@@ -168,6 +172,7 @@ export default {
         this.date.year + "-" + this.dataMonth + "-" + this.dataDay;
       return;
     },
+    // transforma a data para um formato compatível
     transformDate: function() {
       let date = new Date(this.stringDate).toLocaleString("en-US");
       date = this.stringDate.replace(/\b0/g, "");
@@ -176,6 +181,7 @@ export default {
       this.date.month = parseInt(date[1]) - 1;
       this.date.year = date[0];
     },
+    // fecha o popup
     closePopup: function() {
       this.$emit("hidePopup");
     },

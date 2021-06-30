@@ -2,6 +2,7 @@ const knex = require("../database/connection");
 const bcrypt = require("bcrypt");
 
 class PasswordToken {
+  // cria um token para a recuperação de senha
   async create(email) {
     let user = await User.findByEmail(email);
     if (user !== undefined) {
@@ -24,6 +25,7 @@ class PasswordToken {
     }
   }
 
+  // valida o token
   async validate(token) {
     try {
       let result = await knex.select().where({ token }).table("PasswordTokens");
@@ -39,6 +41,7 @@ class PasswordToken {
     }
   }
 
+  // define o token como usado
   async setUsed(token) {
     await knex
       .update({ used: 1 })

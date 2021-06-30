@@ -60,7 +60,6 @@
     </div>
     <div v-if="fake !== true">
       <FloatMenu />
-      <TopMenu />
     </div>
   </div>
 </template>
@@ -73,7 +72,6 @@ import TopMonthSelector from "./TopMonthSelector.vue";
 import TopYearSelector from "./TopYearSelector.vue";
 import NewEventCard from "./NewEventCard.vue";
 import FloatMenu from "./FloatMenu.vue";
-import TopMenu from "./TopMenu.vue";
 import axios from "axios";
 
 export default {
@@ -110,15 +108,17 @@ export default {
     TopYearSelector,
     NewEventCard,
     FloatMenu,
-    TopMenu,
   },
   methods: {
+    // retorna o primeiro dia do mês
     getFirstDay: function(year, month) {
       return new Date(year, month).getDay();
     },
+    // retorna quantos dias o mes tem
     getDaysInMonth: function(year, month) {
       return 32 - new Date(year, month, 32).getDate();
     },
+    // monta o calendário
     buildCalendar: function(
       year = this.currentYear,
       month = this.currentMonth
@@ -136,20 +136,18 @@ export default {
       this.schedule = [];
       this.checkEvent();
     },
+    // mostra o card de criação de eventos
     showPopup: function(day) {
       this.popupData.day = day;
       this.popupData.month = this.currentMonth;
       this.popupData.year = this.currentYear;
       this.allowPopup = true;
     },
+    // esconde o card de criação de eventos
     hidePopup: function() {
       this.allowPopup = false;
     },
-    checkToday() {
-      if ((this.currenthMonth = new Date().getMonth())) {
-        return true;
-      }
-    },
+    // retorna o id do usuário
     getUser: async function() {
       await axios
         .post("http://localhost:3030/validate", {}, this.req)
@@ -161,6 +159,7 @@ export default {
           this.$router.push({ name: "login" });
         });
     },
+    // retorna os eventos do usuáro
     getEvents: async function() {
       await axios
         .get("http://localhost:3030/getall/" + this.user_id, this.req)
@@ -171,6 +170,7 @@ export default {
           console.log(err.params.error);
         });
     },
+    // verifica se existe evento na data atual
     checkEvent: function() {
       this.events.forEach((event) => {
         this.dayCount.forEach((day) => {
@@ -184,6 +184,7 @@ export default {
         });
       });
     },
+    // retorna true se o evento for no dia passado
     findEvent: function(day) {
       return !!this.schedule.find((event) => {
         return event == day;

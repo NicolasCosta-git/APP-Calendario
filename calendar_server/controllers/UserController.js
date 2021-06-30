@@ -4,13 +4,13 @@ const jwt = require("jsonwebtoken");
 const secret = "123127ytasd7asd81y23as8dtga23379qgasd79astd79";
 
 class UserController {
-  async index(req, res) {}
-
+  // cria o usuário
   async create(req, res) {
     let { email, password } = req.body;
     if (
-      email == undefined &&
-      !/[A-Z0-9._%+-]+@[A-Z0-9-]+.+.[A-Z]{2,4}/gim.test(email)
+      (email == undefined &&
+        !/[A-Z0-9._%+-]+@[A-Z0-9-]+.+.[A-Z]{2,4}/gim.test(email)) ||
+      email.length < 1
     ) {
       res.status(406);
       res.json({ error: "Email inválido" });
@@ -35,6 +35,7 @@ class UserController {
     return;
   }
 
+  // recuperação de senha. retorna um token
   async recoverPassword(req, res) {
     let { email } = req.body;
     try {
@@ -56,6 +57,7 @@ class UserController {
     return;
   }
 
+  // recupera a senha, precisa de um token válido
   async changePassword(req, res) {
     let { token, password } = req.body;
     let isTokenValid = await PasswordToken.validate(token);
@@ -73,6 +75,7 @@ class UserController {
     res.send("password updated");
   }
 
+  // login
   async login(req, res) {
     let { email, password } = req.body;
     let user = await User.findByEmail(email);
@@ -84,9 +87,10 @@ class UserController {
       return;
     }
     res.status(406);
-    res.json({ status: "invalid credencials" });
+    res.json({ status: "Credenciais inválidas" });
   }
 
+  // valida o usuário e retorna seu id
   async validateToken(req, res) {
     res.status(200);
     res.json({ valid: true, status: "success", data: req.body.data });
