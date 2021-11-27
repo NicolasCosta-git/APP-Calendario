@@ -24,7 +24,7 @@
           <div class="links">
             <!-- <a href="#" class="forgot-password">Esqueceu sua senha ?</a> -->
             <span>
-              <router-link :to="{name: 'register'}" class="new-account"
+              <router-link :to="{ name: 'register' }" class="new-account"
                 >Ainda não possui uma conta ?</router-link
               ></span
             >
@@ -48,9 +48,9 @@ export default {
   },
   methods: {
     // efetua o login
-    login: function() {
+    login: async function() {
       this.error = undefined;
-      axios
+      await axios
         .post("http://localhost:3030/login", {
           email: this.email,
           password: this.password,
@@ -60,9 +60,8 @@ export default {
           this.$router.push({ name: "calendar" });
         })
         .catch((err) => {
-          
           this.error = err.response.data.status;
-          console.log(this.error)
+          console.log(this.error);
         });
     },
   },

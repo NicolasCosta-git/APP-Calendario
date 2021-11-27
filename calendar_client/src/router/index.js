@@ -3,6 +3,7 @@ import Calendar from "../views/Calendar.vue";
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
 import Events from "../views/Events.vue";
+import Profile from "../views/Profile.vue"
 import axios from "axios";
 
 async function UserAuth(to, from, next) {
@@ -53,6 +54,12 @@ const routes = [
     path: "/events",
     name: "events",
     component: Events,
+    beforeEnter: UserAuth,
+  },
+  {
+    path: "/profile",
+    name: "profile",
+    component: Profile,
     beforeEnter: UserAuth,
   },
 ];

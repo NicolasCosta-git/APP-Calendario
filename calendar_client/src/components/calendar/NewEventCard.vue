@@ -33,6 +33,10 @@
             class="event-time"
           />
         </div>
+        <div class="image-button">
+          <button @click="getImage()">escolher imagem</button>
+          <input type="file" @change="setFile" id="imageInput" hidden />
+        </div>
         <textarea
           v-model="description"
           id=""
@@ -58,6 +62,7 @@ export default {
       req: {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
+          accept: "multipart/form-data"
         },
       },
       dataDay: null,
@@ -75,6 +80,7 @@ export default {
         endingTime: undefined,
       },
       description: undefined,
+      image: "",
     };
   },
   props: {
@@ -95,9 +101,17 @@ export default {
           this.$router.push({ name: "login" });
         });
     },
+    setFile: function(event) {
+      this.image = event.target.files[0];
+      const fd = new FormData();
+      fd.append("image", event.target.files[0], event.target.files[0].name);
+      this.image = fd;
+      console.log(fd)
+    },
     // cria um novo evento
     createEvent: async function() {
       this.error = undefined;
+      console.log("log de imagem", this.image)
       axios
         .post(
           "http://localhost:3030/newevent",
@@ -107,6 +121,7 @@ export default {
             date: this.date,
             time: this.time,
             description: this.description,
+            image: this.image,
           },
           this.req
         )
@@ -123,6 +138,10 @@ export default {
     // fecha o popup
     closePopup: function() {
       this.$emit("closePopup");
+    },
+    getImage: function() {
+      document.getElementById("imageInput").click();
+      return false;
     },
   },
   async created() {
@@ -157,7 +176,7 @@ export default {
   margin: auto;
   width: 600px;
   border-radius: 13px;
-  height: 730px;
+  height: 750px;
   background-color: #e9e7e7;
   border: 1px solid rgba(0, 0, 0, 0.212);
   overflow: hidden;
@@ -184,6 +203,28 @@ export default {
   font-size: 1.2em;
   border-radius: 8px;
   margin: 0px 0 20px 0;
+}
+
+.image-button button {
+  width: 50%;
+  border: none;
+  line-height: 30px;
+  margin: 22px auto 0px auto;
+  background-color: #b2dfdb81;
+  border-radius: 8px;
+  font-size: 1.3em;
+  color: #2c3e50;
+}
+
+.image-button button:hover {
+  cursor: pointer;
+  background-color: #b2dfdbbe;
+}
+
+.image-button {
+  display: flex;
+  justify-content: center;
+  border: 1px solid rgba(0, 0, 0, 0);
 }
 
 .event-name:focus {

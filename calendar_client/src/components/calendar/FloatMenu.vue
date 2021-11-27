@@ -7,6 +7,9 @@
           <router-link :to="{ name: 'events' }">Meus eventos</router-link>
         </li>
         <li>
+          <router-link :to="{ name: 'profile' }">Editar perfil</router-link>
+        </li>
+        <li>
           <a @click="logOut()" href="#">Sair</a>
         </li>
       </ul>
@@ -26,6 +29,9 @@ export default {
     logOut: function() {
       localStorage.removeItem("token");
       this.$router.push({ name: "login" });
+    },
+    profile: function() {
+      this.$router.push({ name: "profile" });
     },
   },
 };
