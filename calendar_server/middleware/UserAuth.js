@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
+require("dotenv").config()
 
-const secret = "123127ytasd7asd81y23as8dtga23379qgasd79astd79";
+const secret = process.env.SECRET;
 
 // AuthMiddleware, não permite que o usuário entre em rotas protegidas sem estar autenticado
 module.exports = function (req, res, next) {
@@ -15,11 +16,11 @@ module.exports = function (req, res, next) {
       return;
     } catch (err) {
       res.status(403);
-      res.json({ valid: false, error: "invalid password" });
+      res.json({ valid: false, error: "invalid user/password combination" });
       return;
     }
   }
   res.status(403);
-  res.json({ valid: false, error: "invalid password" });
+  res.json({ valid: false, error: "invalid user/password combination" });
   return;
 };

@@ -35,6 +35,40 @@ class UserController {
     return;
   }
 
+  async update(req, res) {
+    const { password, email } = req.body;
+    const { id } = req.params;
+    console.log("aa");
+    if (
+      (email == undefined &&
+        !/[A-Z0-9._%+-]+@[A-Z0-9-]+.+.[A-Z]{2,4}/gim.test(email)) ||
+      email.length < 1
+    ) {
+      res.json({ error: "Email inválido" });
+      return;
+    }
+    if (password == undefined || password.length < 5) {
+      res.json({
+        error: "A senha deve conter pelo menos 5 caracteres",
+      });
+      return;
+    }
+    const userByEmail = await User.findByEmail(email);
+    console.log(userByEmail);
+    if (
+      (userByEmail?.id + "" === id &&
+        (userByEmail?.email !== email || userByEmail?.email === email)) ||
+      userByEmail?.email !== email ||
+      !userByEmail
+    ) {
+      await User.update({ email, password }, id);
+      res.json({ success: "User updated" });
+      return;
+    }
+    res.json({ error: "Este e-mail já está cadastrado" });
+    return;
+  }
+
   // recuperação de senha. retorna um token
   async recoverPassword(req, res) {
     let { email } = req.body;
@@ -81,7 +115,7 @@ class UserController {
     let user = await User.findByEmail(email);
 
     if (user !== undefined && (await bcrypt.compare(password, user.password))) {
-      let token = jwt.sign({ emai: user.emai, id: user.id }, secret);
+      let token = jwt.sign({ email: user.email, id: user.id }, secret);
       res.status(200);
       res.json(token);
       return;
@@ -95,6 +129,11 @@ class UserController {
     res.status(200);
     res.json({ valid: true, status: "success", data: req.body.data });
     return;
+  }
+
+  async deleteUser(req, res) {
+    await User.delete(req.params.id);
+    res.json({ success: true });
   }
 }
 

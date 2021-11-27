@@ -24,6 +24,39 @@ class User {
     }
   }
 
+  async update(data, id) {
+    if (data.password) {
+      const password = await bcrypt.hash(data.password, Math.random());
+      try {
+        await knex
+          .update({ email: data.email, password })
+          .where({ id })
+          .table("Users");
+        return;
+      } catch (err) {
+        console.log(err);
+        return;
+      }
+    } else {
+      try {
+        await knex.update({ email: data.email }).where({ id }).table("Users");
+        return;
+      } catch (err) {
+        console.log(err);
+        return;
+      }
+    }
+  }
+
+  async delete(id) {
+    try {
+      await knex.delete().where({ id }).table("Users");
+      return true;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   // encontra o usuário pelo email
   async findByEmail(email) {
     try {
