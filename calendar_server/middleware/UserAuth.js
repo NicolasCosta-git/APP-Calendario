@@ -1,10 +1,11 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config()
 
-const secret = process.env.SECRET;
+const secret = "123127ytasd7asd81y23as8dtga23379qgasd79astd79"
 
 // AuthMiddleware, não permite que o usuário entre em rotas protegidas sem estar autenticado
 module.exports = function (req, res, next) {
+/*   console.log(req.headers) */
   const authToken = req.headers["authorization"];
   if (authToken !== undefined) {
     let bearer = authToken.split(" ");
