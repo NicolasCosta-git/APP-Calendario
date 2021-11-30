@@ -65,6 +65,8 @@
 
 <script>
 import axios from "axios";
+import * as fakeEnv from "../../fakeEnv"
+
 
 export default {
   data() {
@@ -74,6 +76,7 @@ export default {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
       },
+      url: fakeEnv.ENV.url,
       stringDate: null,
       dataDay: null,
       dataMonth: null,
@@ -118,12 +121,12 @@ export default {
       this.description = this.Pdescription;
     },
     // faz update no evento
-    updateEvent: function() {
+    updateEvent: async function() {
       this.error = undefined;
       this.transformDate();
-      axios
+      await axios
         .post(
-          "http://localhost:3030/updateevent",
+          `${this.url}updateevent`,
           {
             id: this.id,
             user_id: this.user_id,
@@ -149,7 +152,7 @@ export default {
       this.error = undefined;
       await axios
         .delete(
-          "http://localhost:3030/deleteevent/" + this.user_id + "/" + this.id,
+          `${this.url}deleteevent/` + this.user_id + "/" + this.id,
           this.req
         )
         .then(() => {

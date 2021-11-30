@@ -42,6 +42,8 @@
 
 <script>
 import axios from "axios";
+import * as fakeEnv from "../../fakeEnv"
+
 
 export default {
   data() {
@@ -51,6 +53,7 @@ export default {
       email: "",
       password: "",
       passwordCheck: "",
+      url: fakeEnv.ENV.url,
       error: undefined,
       req: {
         headers: {
@@ -63,7 +66,7 @@ export default {
     // efetua o registro do usuário,
     getUser: async function() {
       await axios
-        .post("http://localhost:3030/validate", {}, this.req)
+        .post(`${this.url}validate`, {}, this.req)
         .then((res) => {
           this.email = res.data.data.email;
           this.id = res.data.data.id;
@@ -79,7 +82,7 @@ export default {
           if (this.password === this.passwordCheck) {
             await axios
               .put(
-                `http://localhost:3030/user/${this.id}`,
+                `${this.url}user/${this.id}`,
                 {
                   email: this.email,
                   password: this.password,
@@ -100,7 +103,7 @@ export default {
       } else if (this.email) {
         await axios
           .put(
-            `http://localhost:3030/user/${this.id}`,
+             `${this.url}user/${this.id}`,
             {
               email: this.email,
             },
@@ -117,7 +120,7 @@ export default {
     },
     deleteUser: async function() {
       await axios
-        .delete(`http://localhost:3030/user/${this.id}`, this.req)
+        .delete( `${this.url}user/${this.id}`, this.req)
         .then(() => {
           this.success = true;
           localStorage.removeItem("token");

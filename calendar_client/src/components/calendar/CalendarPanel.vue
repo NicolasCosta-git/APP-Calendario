@@ -73,6 +73,7 @@ import TopYearSelector from "./TopYearSelector.vue";
 import NewEventCard from "./NewEventCard.vue";
 import FloatMenu from "./FloatMenu.vue";
 import axios from "axios";
+import * as fakeEnv from "../../fakeEnv"
 
 export default {
   data() {
@@ -82,6 +83,7 @@ export default {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
       },
+      url: fakeEnv.ENV.url,
       currentYear: null,
       currentMonth: null,
       schedule: [],
@@ -150,7 +152,7 @@ export default {
     // retorna o id do usuário
     getUser: async function() {
       await axios
-        .post("http://localhost:3030/validate", {}, this.req)
+        .post(`${this.url}validate`, {}, this.req)
         .then((res) => {
           this.user_id = res.data.data.id;
         })
@@ -162,7 +164,7 @@ export default {
     // retorna os eventos do usuáro
     getEvents: async function() {
       await axios
-        .get("http://localhost:3030/getall/" + this.user_id, this.req)
+        .get(`${this.url}getall/` + this.user_id, this.req)
         .then((res) => {
           this.events = res.data.data;
         })

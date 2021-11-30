@@ -30,6 +30,8 @@
 <script>
 import EventCard from "./EventCard.vue";
 import axios from "axios";
+import * as fakeEnv from "../../fakeEnv"
+
 
 export default {
   name: "EventsPanel",
@@ -44,6 +46,7 @@ export default {
         },
       },
       user_id: undefined,
+      url: fakeEnv.ENV.url,
       events: [],
     };
   },
@@ -51,7 +54,7 @@ export default {
     // retorna o usuário
     getUser: async function() {
       await axios
-        .post("http://localhost:3030/validate", {}, this.req)
+        .post(`${this.url}validate`, {}, this.req)
         .then((res) => {
           this.user_id = res.data.data.id;
         })
@@ -63,7 +66,7 @@ export default {
     // retorna os eventos
     getEvents: async function() {
       await axios
-        .get("http://localhost:3030/getall/" + this.user_id, this.req)
+        .get(`${this.url}getall/` + this.user_id, this.req)
         .then((res) => {
           this.events = res.data.data;
         })

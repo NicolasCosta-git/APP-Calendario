@@ -3,10 +3,13 @@ import Calendar from "../views/Calendar.vue";
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
 import Events from "../views/Events.vue";
-import Profile from "../views/Profile.vue"
+import Profile from "../views/Profile.vue";
 import axios from "axios";
+import * as fakeEnv from "../fakeEnv"
 
 async function UserAuth(to, from, next) {
+  const url = fakeEnv.ENV.url;
+
   if (localStorage.getItem("token") != undefined) {
     const req = {
       headers: {
@@ -14,7 +17,7 @@ async function UserAuth(to, from, next) {
       },
     };
     await axios
-      .post("http://localhost:3030/validate", {}, req)
+      .post(`${url}validate`, {}, req)
       .then((res) => {
         if (res.data.valid) {
           next();

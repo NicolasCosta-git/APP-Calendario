@@ -21,11 +21,14 @@
 
 <script>
 import axios from "axios";
+import * as fakeEnv from "../../fakeEnv"
+
 export default {
   data() {
     return {
       dataDay: null,
       dataMonth: null,
+      url: fakeEnv.ENV.url,
       req: {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
@@ -65,7 +68,7 @@ export default {
       this.error = undefined;
       await axios
         .delete(
-          "http://localhost:3030/deleteevent/" + this.user_id + "/" + this.id,
+          `${this.url}deleteevent/` + this.user_id + "/" + this.id,
           this.req
         )
         .then(() => {

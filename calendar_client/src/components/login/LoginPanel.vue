@@ -37,6 +37,7 @@
 
 <script>
 import axios from "axios";
+import * as fakeEnv from "../../fakeEnv"
 
 export default {
   data() {
@@ -44,6 +45,7 @@ export default {
       email: "",
       password: "",
       error: undefined,
+      url: fakeEnv.ENV.url
     };
   },
   methods: {
@@ -51,7 +53,7 @@ export default {
     login: async function() {
       this.error = undefined;
       await axios
-        .post("http://localhost:3030/login", {
+        .post(`${this.url}login`, {
           email: this.email,
           password: this.password,
         })

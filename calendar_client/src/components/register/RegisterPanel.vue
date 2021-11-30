@@ -35,21 +35,24 @@
 
 <script>
 import axios from "axios";
+import * as fakeEnv from "../../fakeEnv"
+
 
 export default {
   data() {
     return {
       email: "",
+      url: fakeEnv.ENV.url,
       password: "",
       error: undefined,
     };
   },
   methods: {
     // efetua o registro do usuário
-    register: function() {
+    register: async function() {
       this.error = undefined;
-      axios
-        .post("http://localhost:3030/register", {
+      await axios
+        .post(`${this.url}register`, {
           email: this.email,
           password: this.password,
         })

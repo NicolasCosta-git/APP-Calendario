@@ -55,6 +55,8 @@
 
 <script>
 import axios from "axios";
+import * as fakeEnv from "../../fakeEnv"
+
 
 export default {
   data() {
@@ -65,6 +67,7 @@ export default {
           accept: "multipart/form-data"
         },
       },
+      url: fakeEnv.ENV.url,
       dataDay: null,
       dataMonth: null,
       error: undefined,
@@ -92,7 +95,7 @@ export default {
     // retorna o id do usuário
     getUser: async function() {
       await axios
-        .post("http://localhost:3030/validate", {}, this.req)
+        .post(`${this.url}validate`, {}, this.req)
         .then((res) => {
           this.user_id = res.data.data.id;
         })
@@ -112,9 +115,9 @@ export default {
     createEvent: async function() {
       this.error = undefined;
       console.log("log de imagem", this.image)
-      axios
+      await axios
         .post(
-          "http://localhost:3030/newevent",
+         `${this.url}newevent`,
           {
             user_id: this.user_id,
             title: this.title,
