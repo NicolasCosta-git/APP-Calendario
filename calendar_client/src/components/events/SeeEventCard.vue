@@ -2,7 +2,7 @@
   <div class="see-event-card">
     <div class="event-card">
       <div class="card-header">
-        <a href="#" @click="closePopup()" class="exit-button"
+        <a @click="closePopup()" class="exit-button"
           ><img src="../../assets/x-mark.png" alt=""
         /></a>
         <h1>{{ title }}</h1>
@@ -54,9 +54,7 @@
           <button @click="updateEvent()" type="submit" class="save-button">
             Salvar
           </button>
-          <button @click="deleteEvent()" class="delete-button">
-            Deletar
-          </button>
+          <button @click="deleteEvent()" class="delete-button">Deletar</button>
         </div>
       </div>
     </div>
@@ -65,8 +63,7 @@
 
 <script>
 import axios from "axios";
-import * as fakeEnv from "../../fakeEnv"
-
+import * as fakeEnv from "../../fakeEnv";
 
 export default {
   data() {
@@ -109,7 +106,7 @@ export default {
   },
   methods: {
     //seta as variáveis com os dados do evento
-    fillData: function() {
+    fillData: function () {
       this.id = this.Pid;
       this.user_id = this.Puser_id;
       this.title = this.Ptitle;
@@ -121,7 +118,7 @@ export default {
       this.description = this.Pdescription;
     },
     // faz update no evento
-    updateEvent: async function() {
+    updateEvent: async function () {
       this.error = undefined;
       this.transformDate();
       await axios
@@ -148,7 +145,7 @@ export default {
         });
     },
     // deleta evento
-    deleteEvent: async function() {
+    deleteEvent: async function () {
       this.error = undefined;
       await axios
         .delete(
@@ -164,7 +161,7 @@ export default {
         });
     },
     // converte a data, adicionando 0 na frente dos números com dígitos únicos
-    convertDate: function() {
+    convertDate: function () {
       this.date.day < 10
         ? (this.dataDay = "0" + this.date.day)
         : (this.dataDay = this.date.day);
@@ -176,7 +173,7 @@ export default {
       return;
     },
     // transforma a data para um formato compatível
-    transformDate: function() {
+    transformDate: function () {
       let date = new Date(this.stringDate).toLocaleString("en-US");
       date = this.stringDate.replace(/\b0/g, "");
       date = date.split("-");
@@ -185,7 +182,7 @@ export default {
       this.date.year = date[0];
     },
     // fecha o popup
-    closePopup: function() {
+    closePopup: function () {
       this.$emit("hidePopup");
     },
   },
@@ -383,5 +380,9 @@ export default {
   right: 10px;
   float: right;
   opacity: 0.62;
+}
+
+.exit-button a {
+  cursor: pointer;
 }
 </style>
