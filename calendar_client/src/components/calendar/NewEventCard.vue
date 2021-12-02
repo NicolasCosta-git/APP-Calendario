@@ -55,8 +55,7 @@
 
 <script>
 import axios from "axios";
-import * as fakeEnv from "../../fakeEnv"
-
+import * as fakeEnv from "../../fakeEnv";
 
 export default {
   data() {
@@ -64,7 +63,7 @@ export default {
       req: {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
-          accept: "multipart/form-data"
+          accept: "multipart/form-data",
         },
       },
       url: fakeEnv.ENV.url,
@@ -93,7 +92,7 @@ export default {
   },
   methods: {
     // retorna o id do usuário
-    getUser: async function() {
+    getUser: async function () {
       await axios
         .post(`${this.url}validate`, {}, this.req)
         .then((res) => {
@@ -104,20 +103,28 @@ export default {
           this.$router.push({ name: "login" });
         });
     },
-    setFile: function(event) {
+    setFile: async function (event) {
       this.image = event.target.files[0];
       const fd = new FormData();
       fd.append("image", event.target.files[0], event.target.files[0].name);
       this.image = fd;
-      console.log(fd)
     },
     // cria um novo evento
-    createEvent: async function() {
+    createEvent: async function () {
       this.error = undefined;
-      console.log("log de imagem", this.image)
+      await axios
+        .post(`${this.url}upload`, this.image, this.req)
+        .then((res) => {
+          this.image = res.data;
+        })
+        .catch((err) => {
+          console.log(err.response);
+          this.error = err.response.data.error;
+        });
+
       await axios
         .post(
-         `${this.url}newevent`,
+          `${this.url}newevent`,
           {
             user_id: this.user_id,
             title: this.title,
@@ -139,10 +146,10 @@ export default {
         });
     },
     // fecha o popup
-    closePopup: function() {
+    closePopup: function () {
       this.$emit("closePopup");
     },
-    getImage: function() {
+    getImage: function () {
       document.getElementById("imageInput").click();
       return false;
     },

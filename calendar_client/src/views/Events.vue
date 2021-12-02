@@ -17,6 +17,7 @@
         :PstartingTime="popupData.PstartingTime"
         :PendingTime="popupData.PendingTime"
         :Pdescription="popupData.Pdescription"
+        :Pdimage="popupData.Pdimage"
         @hidePopup="closePopup()"
       />
     </div>
@@ -48,11 +49,12 @@ export default {
         PstartingTime: null,
         Pdescription: null,
         PendingTime: null,
+        Pimage: null,
       },
     };
   },
   methods: {
-    showPopup: function(data) {
+    showPopup: function (data) {
       this.popupData.Pid = data.event.id;
       this.popupData.Puser_id = data.event.user_id;
       this.popupData.Pday = data.event.day;
@@ -62,9 +64,10 @@ export default {
       this.popupData.PstartingTime = data.event.startingTime;
       this.popupData.Pdescription = data.event.description;
       this.popupData.PendingTime = data.event.endingTime;
+      this.popupData.Pimage = data.event.image;
       this.showPopupCard = true;
     },
-    closePopup: function() {
+    closePopup: function () {
       this.showPopupCard = false;
     },
   },

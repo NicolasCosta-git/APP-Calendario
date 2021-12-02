@@ -19,6 +19,7 @@
             :title="event.title"
             :user_id="event.user_id"
             :year="event.year"
+            :image="event.image"
             @showEvent="showPopup($event)"
           />
         </div>

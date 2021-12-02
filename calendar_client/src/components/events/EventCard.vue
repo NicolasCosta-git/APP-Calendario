@@ -8,9 +8,16 @@
       </h2>
     </div>
     <div class="event-body">
-      <div class="starting-time">começa: {{ startingTime }}</div>
-      <div class="ending-time">termina {{ endingTime }}</div>
-      <div class="description">{{ description }}</div>
+      <div class="starting-time">
+        das {{ startingTime }} ás {{ endingTime }}
+      </div>
+      <img
+        :src="image"
+        :alt="description"
+        height="200"
+        width="400"
+        style="display: block; margin: auto; border-radius: 5px"
+      />
     </div>
     <div class="button-container">
       <button @click="seeEvent()" class="see-button">Ver</button>
@@ -21,7 +28,7 @@
 
 <script>
 import axios from "axios";
-import * as fakeEnv from "../../fakeEnv"
+import * as fakeEnv from "../../fakeEnv";
 
 export default {
   data() {
@@ -46,10 +53,11 @@ export default {
     startingTime: String,
     endingTime: String,
     description: String,
+    image: String,
   },
   methods: {
     // mostra card do evento
-    seeEvent: function() {
+    seeEvent: function () {
       this.$emit("showEvent", {
         id: this.id,
         user_id: this.user_id,
@@ -64,7 +72,7 @@ export default {
       return;
     },
     // deleta o evento
-    deleteEvent: async function() {
+    deleteEvent: async function () {
       this.error = undefined;
       await axios
         .delete(
@@ -92,7 +100,7 @@ export default {
 <style scoped>
 .event-card {
   border-radius: 8px;
-  height: 200px;
+  height: 400px;
   margin: 10px;
   background-color: #fafafae7;
   color: #2c3e50;
@@ -111,8 +119,7 @@ export default {
 }
 
 .starting-time {
-  display: inline-block;
-  width: 50%;
+  display: block;
   padding: 13px 0px 10px 10px;
   font-size: 1.3em;
   text-align: center;
@@ -133,6 +140,11 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
   width: 100%;
+  border-bottom: 1px solid gray;
+  width: 70%;
+  margin: auto;
+  text-align: left;
+  margin-bottom: 5px;
 }
 
 .header-title {
@@ -142,6 +154,7 @@ export default {
   text-overflow: ellipsis;
   width: 200px;
   height: 30px;
+  text-align: center;
 }
 
 .event-card button {
