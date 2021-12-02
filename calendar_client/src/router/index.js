@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter } from "vue-router";
 import Calendar from "../views/Calendar.vue";
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
@@ -6,6 +6,7 @@ import Events from "../views/Events.vue";
 import Profile from "../views/Profile.vue";
 import axios from "axios";
 import * as fakeEnv from "../fakeEnv"
+import { createWebHashHistory } from 'vue-router/dist/vue-router.cjs';
 
 async function UserAuth(to, from, next) {
   const url = fakeEnv.ENV.url;
@@ -68,7 +69,7 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHashHistory("/"),
   routes,
 });
 

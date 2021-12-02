@@ -2,7 +2,7 @@
   <div class="new-event-card">
     <div class="event-card">
       <div class="card-header">
-        <a @click="closePopup()" href="#" class="exit-button"
+        <a @click="closePopup()" class="exit-button"
           ><img src="../../assets/x-mark.png" alt=""
         /></a>
         <h1>{{ dataDay }}/{{ dataMonth }}/{{ year }} - Novo Evento</h1>
@@ -318,5 +318,9 @@ export default {
   right: 10px;
   float: right;
   opacity: 0.62;
+}
+
+.exit-button a {
+  cursor: pointer;
 }
 </style>

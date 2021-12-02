@@ -33,10 +33,10 @@
             'empty-card': empty == true,
           }"
         >
-          <a @click="newPopup()" href="#">
+          <a @click="newPopup()">
             <img src="../../assets/plus.png" alt="" />
           </a>
-          <a @click="newPopup()" href="#">Adicionar evento</a>
+          <a @click="newPopup()">Adicionar evento</a>
         </div>
       </div>
     </div>
@@ -125,6 +125,7 @@ a {
   color: #2c3e50;
   font-size: 1.1em;
   font-weight: 300;
+  cursor: pointer;
 }
 
 .event-notification {
