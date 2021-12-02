@@ -23,8 +23,8 @@ class EventController {
         res.json({ error: "Já existe um evento com este nome" });
         return;
       }
-      if(req.body.image){
-        console.log("log de imagem: ", req)
+      if (!req.body.image) {
+        req.body.image = "";
       }
       await Event.create(req.body);
       res.status(200);
@@ -74,7 +74,9 @@ class EventController {
         res.json({ error: "Já existe um evento com este nome" });
         return;
       }
-
+      if (!req.body.image) {
+        req.body.image = "";
+      }
       await Event.update(req.body);
       res.status(200);
       res.json({ success: "Evento atualizado" });
@@ -83,6 +85,21 @@ class EventController {
       res.status(406);
       res.json({ error: "Failed creating event" });
       console.log(err);
+      return;
+    }
+  }
+
+  async imageUpload(req, res) {
+    try {
+      const image = await (
+        await uploadS3(req.files.image)
+      ).replace("uploads", "compressed");
+      console.log(image);
+      res.json(image);
+      return;
+    } catch (err) {
+      res.status(400);
+      res.json({ message: "Fail to send image" });
       return;
     }
   }
@@ -164,4 +181,4 @@ class EventController {
 
 module.exports = new EventController();
 const Event = require("../models/Events");
-const uploadS4 = require("../helpers/S3/uploadS3")
+const uploadS3 = require("../helpers/S3/uploadS3");

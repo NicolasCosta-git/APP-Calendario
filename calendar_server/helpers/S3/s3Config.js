@@ -4,13 +4,12 @@ require("dotenv").config();
 module.exports = function S3Config() {
   const s3 = {
     credentials: {
-      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+      accessKeyId: "",
+      secretAccessKey: "",
     },
-    region: process.env.AWS_S3_REGION,
+    region: "",
     params: {
-      ACL: "public-read",
-      Bucket: `${process.env.AWS_S3_CALENDAR_BUCKET}`,
+      Bucket: '',
     },
   };
 
