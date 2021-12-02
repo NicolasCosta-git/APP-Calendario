@@ -4,12 +4,12 @@ require("dotenv").config();
 module.exports = function S3Config() {
   const s3 = {
     credentials: {
-      accessKeyId: "",
-      secretAccessKey: "",
+      accessKeyId: "AKIAQEKWHTOTEUT6V2M2",
+      secretAccessKey: "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",
     },
-    region: "",
+    region: "us-east-1",
     params: {
-      Bucket: '',
+      Bucket: 'calendar-images/uploads',
     },
   };
 

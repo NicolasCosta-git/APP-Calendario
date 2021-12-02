@@ -91,9 +91,9 @@ class EventController {
 
   async imageUpload(req, res) {
     try {
-      const image = await (
-        await uploadS3(req.files.image)
-      ).replace("uploads", "compressed");
+      const image = await (await uploadS3(req.files.image))
+        .replace("uploads", "compressed")
+        .replace("png", "jpg");
       res.json(image);
       return;
     } catch (err) {
