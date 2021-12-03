@@ -38,6 +38,7 @@ class Events {
           startingTime: data.time.startingTime,
           endingTime: data.time.endingTime,
           description: data.description,
+          image: data.image,
         })
         .where({ id: data.id })
         .table("Events");
