@@ -31,8 +31,7 @@
 <script>
 import EventCard from "./EventCard.vue";
 import axios from "axios";
-import * as fakeEnv from "../../fakeEnv"
-
+import * as fakeEnv from "../../fakeEnv";
 
 export default {
   name: "EventsPanel",
@@ -44,6 +43,7 @@ export default {
       req: {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
+          accept: "multipart/form-data",
         },
       },
       user_id: undefined,
@@ -53,7 +53,7 @@ export default {
   },
   methods: {
     // retorna o usuário
-    getUser: async function() {
+    getUser: async function () {
       await axios
         .post(`${this.url}validate`, {}, this.req)
         .then((res) => {
@@ -65,7 +65,7 @@ export default {
         });
     },
     // retorna os eventos
-    getEvents: async function() {
+    getEvents: async function () {
       await axios
         .get(`${this.url}getall/` + this.user_id, this.req)
         .then((res) => {
@@ -76,11 +76,11 @@ export default {
         });
     },
     // mostra o popup do evento
-    showPopup: function(event) {
+    showPopup: function (event) {
       this.$emit("showEvent", { event });
     },
     // fecha o painel de eventos
-    closePanel: function() {
+    closePanel: function () {
       this.$router.push({ name: "calendar" });
     },
   },

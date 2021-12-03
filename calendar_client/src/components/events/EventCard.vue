@@ -11,13 +11,16 @@
       <div class="starting-time">
         das {{ startingTime }} ás {{ endingTime }}
       </div>
-      <img
+      <img v-if="image"
         :src="image"
-        :alt="description"
+        alt="'"
         height="200"
         width="400"
         style="display: block; margin: auto; border-radius: 5px"
       />
+      <p v-else style="text-align: left; padding: 0px 50px 0px 50px; font-size: 1.5em;">
+        {{description}}
+      </p>
     </div>
     <div class="button-container">
       <button @click="seeEvent()" class="see-button">Ver</button>
@@ -68,6 +71,7 @@ export default {
         startingTime: this.startingTime,
         endingTime: this.endingTime,
         description: this.description,
+        image: this.image
       });
       return;
     },
@@ -100,11 +104,12 @@ export default {
 <style scoped>
 .event-card {
   border-radius: 8px;
-  height: 400px;
+  max-height: 400px;
   margin: 10px;
   background-color: #fafafae7;
   color: #2c3e50;
   min-width: 270px;
+  padding-bottom: 20px;
 }
 
 .event-card:hover {

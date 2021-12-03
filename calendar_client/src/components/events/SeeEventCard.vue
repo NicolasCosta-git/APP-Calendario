@@ -42,6 +42,23 @@
             class="event-date"
           />
         </div>
+        <div class="image-button" style="text-align: center; margin: 10px 5px">
+          <button @click="getImage()" style="width: 40%; margin-right: 5px">
+            escolher imagem
+          </button>
+          <button @click="removeImage()" style="width: 40%; margin-left: 5px">
+            remover imagem
+          </button>
+          <input type="file" @change="setFile" id="imageInput" hidden />
+        </div>
+        <img
+          v-if="showImage"
+          :src="Iurl"
+          alt="1"
+          height="200"
+          width="400"
+          style="display: block; margin: auto; border-radius: 5px"
+        />
         <textarea
           v-model="description"
           id=""
@@ -73,6 +90,7 @@ export default {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
       },
+      showImage: false,
       url: fakeEnv.ENV.url,
       stringDate: null,
       dataDay: null,
@@ -81,6 +99,7 @@ export default {
       id: undefined,
       user_id: undefined,
       title: undefined,
+      image: "",
       date: {
         day: undefined,
         month: undefined,
@@ -103,6 +122,7 @@ export default {
     PstartingTime: String,
     PendingTime: String,
     Pdescription: String,
+    Pdimage: String,
   },
   methods: {
     //seta as variáveis com os dados do evento
@@ -116,11 +136,27 @@ export default {
       this.time.startingTime = this.PstartingTime;
       this.time.endingTime = this.PendingTime;
       this.description = this.Pdescription;
+      this.Iurl = this.Pdimage;
+      if (this.Iurl) this.showImage = true;
     },
     // faz update no evento
     updateEvent: async function () {
       this.error = undefined;
       this.transformDate();
+
+      if (this.image) {
+        await axios
+          .post(`${this.url}upload`, this.image, this.req)
+          .then((res) => {
+            this.image = res.data;
+          })
+          .catch((err) => {
+            console.log(err.response);
+            this.error = err.response.data.error;
+          });
+      }
+
+      console.log(this.image);
       await axios
         .post(
           `${this.url}updateevent`,
@@ -131,6 +167,7 @@ export default {
             date: this.date,
             time: this.time,
             description: this.description,
+            image: this.image,
           },
           this.req
         )
@@ -143,6 +180,12 @@ export default {
           this.error = err.response.data.error;
           console.log(err.response.data.error);
         });
+    },
+    setFile: async function (event) {
+      this.image = event.target.files[0];
+      const fd = new FormData();
+      fd.append("image", event.target.files[0], event.target.files[0].name);
+      this.image = fd;
     },
     // deleta evento
     deleteEvent: async function () {
@@ -171,6 +214,15 @@ export default {
       this.stringDate =
         this.date.year + "-" + this.dataMonth + "-" + this.dataDay;
       return;
+    },
+    removeImage() {
+      console.log(this.Iurl);
+      this.image = "";
+      this.showImage = false;
+    },
+    getImage: function () {
+      document.getElementById("imageInput").click();
+      return false;
     },
     // transforma a data para um formato compatível
     transformDate: function () {
@@ -218,6 +270,17 @@ export default {
   border: 1px solid rgba(0, 0, 0, 0.212);
 }
 
+.image-button button {
+  width: 50%;
+  border: none;
+  line-height: 30px;
+  margin: 22px auto 0px auto;
+  background-color: #b2dfdb81;
+  border-radius: 8px;
+  font-size: 1.3em;
+  color: #2c3e50;
+}
+
 .card-header {
   background-color: #80cbc4;
 }
@@ -229,6 +292,8 @@ export default {
 
 .event-details {
   padding: 30px;
+  height: 100%;
+  overflow-y: scroll;
 }
 
 .event-name {
@@ -298,6 +363,7 @@ export default {
 }
 
 .button-panel {
+  height: 170px;
   text-align: center;
 }
 
@@ -384,5 +450,10 @@ export default {
 
 .exit-button a {
   cursor: pointer;
+}
+
+.image-button button:hover {
+  cursor: pointer;
+  background-color: #b2dfdbbe;
 }
 </style>

@@ -17,7 +17,7 @@
         :PstartingTime="popupData.PstartingTime"
         :PendingTime="popupData.PendingTime"
         :Pdescription="popupData.Pdescription"
-        :Pdimage="popupData.Pdimage"
+        :Pdimage="popupData.Pimage"
         @hidePopup="closePopup()"
       />
     </div>
